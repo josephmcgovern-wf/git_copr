@@ -13,16 +13,15 @@ fn main() {
     let args = Cli::from_args();
     let branch = format!("pull_{}", args.pull_number);
     let branch_to_pull = format!("refs/pull/{}/head:{}", args.pull_number, branch);
-    let mut git = Command::new("git");
-    let output = git.arg("fetch").arg("upstream").arg(&branch_to_pull).output().expect("Error fetching branch");
+    let output = Command::new("git").arg("fetch").arg("upstream").arg(&branch_to_pull).output().expect("Error fetching branch");
     if output.status.success() {
         println!("{}", String::from_utf8(output.stdout).expect("Expected stdout to be utf8 vector"));
     }
     else {
-        let output = git.arg("fetch").arg("origin").arg(&branch_to_pull).status().expect("Error fetching branch");
+        let output = Command::new("git").arg("fetch").arg("origin").arg(&branch_to_pull).status().expect("Error fetching branch");
         if !output.success() {
             return;
         }
     }
-    git.arg("checkout").arg(branch).status().expect("Failed to fetch branch");
+    Command::new("git").arg("checkout").arg(branch).status().expect("Failed to fetch branch");
 }
