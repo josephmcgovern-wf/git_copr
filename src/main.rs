@@ -7,11 +7,18 @@ use std::process::Command;
 struct Cli {
     /// The pull request number to look for
     pull_number: i32,
+
+    /// What to name the new branch
+    #[structopt(short = "b", long = "branch")]
+    branch: Option<String>,
 }
 
 fn main() {
     let args = Cli::from_args();
-    let branch = format!("pull_{}", args.pull_number);
+    let branch = match args.branch {
+        Some(b) => b,
+        None => format!("pull_{}", args.pull_number)
+    };
     let base_branch_to_pull = format!("pull/{}/head", args.pull_number);
     let branch_to_pull = format!("{}:{}", base_branch_to_pull, branch);
     let branch_output = Command::new("git").arg("branch-current").output().expect("Error fetching current branch");
