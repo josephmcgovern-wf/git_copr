@@ -17,7 +17,7 @@ fn main() {
     let args = Cli::from_args();
     let branch = match args.branch {
         Some(b) => b,
-        None => format!("pull_{}", args.pull_number)
+        None => format!("pr-{}", args.pull_number)
     };
     let base_branch_to_pull = format!("pull/{}/head", args.pull_number);
     let branch_to_pull = format!("{}:{}", base_branch_to_pull, branch);
